@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Upload Excel File</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <script src="{{ url_for('static', filename='accessibility.js') }}" defer></script>
+</head>
+<body>
+    <header class="site-header glass">
+        <div class="header-inner">
+            <a href="{{ url_for('index') }}" class="brand">
+                <img src="{{ url_for('static', filename='img/logo_montalban.png') }}" alt="Company Logo" class="brand-logo">
+                <div class="brand-text">
+                    <span class="brand-title">Excel Search Engine</span>
+                    <span class="brand-subtitle">Upload Center</span>
+                </div>
+            </a>
+            <nav class="header-actions">
+                <a href="{{ url_for('index') }}" class="button ghost">Home</a>
+                <a href="{{ url_for('upload') }}" class="button ghost active">Upload</a>
+                <button type="button" id="readability-toggle" class="button ghost">High Readability: Off</button>
+            </nav>
+        </div>
+    </header>
+
+    <main class="page-enter">
+    <div class="container narrow glass">
+        <h1>Upload Excel File</h1>
+        <p class="subtitle">Supported formats: .xlsx and .xls</p>
+
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                    <div class="alert {{ category }}">{{ message }}</div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+
+        <form action="{{ url_for('upload') }}" method="POST" enctype="multipart/form-data" class="upload-form card">
+            <input type="file" name="excel_file" accept=".xlsx,.xls" required>
+            <button type="submit" class="button icon-btn"><span>📥</span> Upload and Reindex</button>
+        </form>
+
+        <a href="{{ url_for('index') }}" class="button secondary icon-btn"><span>↩</span> Back to Search</a>
+    </div>
+    </main>
+</body>
+</html>

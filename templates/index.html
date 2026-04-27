@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Excel File Search Engine</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <script src="{{ url_for('static', filename='accessibility.js') }}" defer></script>
+</head>
+<body>
+    <header class="site-header glass">
+        <div class="header-inner">
+            <a href="{{ url_for('index') }}" class="brand">
+                <img src="{{ url_for('static', filename='img/logo_montalban.png') }}" alt="Company Logo" class="brand-logo">
+                <div class="brand-text">
+                    <span class="brand-title">Excel Search Engine</span>
+                    <span class="brand-subtitle">In-Memory Indexing</span>
+                </div>
+            </a>
+            <nav class="header-actions">
+                <a href="{{ url_for('index') }}" class="button ghost active">Home</a>
+                <a href="{{ url_for('upload') }}" class="button ghost">Upload</a>
+                <button type="button" id="readability-toggle" class="button ghost">High Readability: Off</button>
+            </nav>
+        </div>
+    </header>
+
+    <main class="page-enter">
+    <div class="container glass">
+        <h1>Search Across Excel Files Instantly</h1>
+        <p class="subtitle">Fast, database-free searching powered by Flask + Pandas</p>
+
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                    <div class="alert {{ category }}">{{ message }}</div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+
+        <div class="top-actions">
+            <form action="{{ url_for('index') }}" method="GET" class="search-form">
+                <input
+                    type="text"
+                    name="q"
+                    placeholder="Enter keyword to search across all columns..."
+                    value="{{ query }}"
+                >
+                <button type="submit" class="button icon-btn"><span>🔍</span> Search</button>
+            </form>
+
+            <div class="action-buttons">
+                <a href="{{ url_for('upload') }}" class="button secondary icon-btn"><span>📤</span> Upload Excel</a>
+                <form action="{{ url_for('reload_index') }}" method="POST">
+                    <button type="submit" class="button warning icon-btn"><span>🔄</span> Reload Index</button>
+                </form>
+                {% if show_all %}
+                    <a href="{{ url_for('index', q=query, page=1, show_all=0) }}" class="button secondary icon-btn"><span>📄</span> Paginated View: On</a>
+                {% else %}
+                    <a href="{{ url_for('index', q=query, show_all=1) }}" class="button secondary icon-btn"><span>📚</span> Show All Data: On</a>
+                {% endif %}
+            </div>
+        </div>
+
+        <div class="results-info">
+            <strong>{{ total_results }}</strong> result(s) found
+            {% if query %}for keyword "<strong>{{ query }}</strong>"{% endif %}
+        </div>
+
+        {% if records %}
+            <div class="table-wrap">
+                <table>
+                    <thead>
+                        <tr>
+                            {% for col in columns %}
+                                <th>{{ col }}</th>
+                            {% endfor %}
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for row in records %}
+                            <tr>
+                                {% for col in columns %}
+                                    <td>{{ row[col] | safe }}</td>
+                                {% endfor %}
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+
+            {% if not show_all %}
+                <div class="pagination">
+                    {% if has_prev %}
+                        <a href="{{ url_for('index', q=query, page=current_page-1) }}" class="button icon-btn"><span>⬅</span> Previous</a>
+                    {% else %}
+                        <span class="button disabled">Previous</span>
+                    {% endif %}
+
+                    <span class="page-info">Page {{ current_page }} of {{ total_pages }}</span>
+
+                    {% if has_next %}
+                        <a href="{{ url_for('index', q=query, page=current_page+1) }}" class="button icon-btn">Next <span>➡</span></a>
+                    {% else %}
+                        <span class="button disabled">Next</span>
+                    {% endif %}
+                </div>
+            {% else %}
+                <div class="pagination">
+                    <span class="page-info">Showing all matched records in one view.</span>
+                </div>
+            {% endif %}
+        {% else %}
+            <div class="empty-state">
+                No matching data found. Try a different keyword or upload Excel files.
+            </div>
+        {% endif %}
+    </div>
+    </main>
+</body>
+</html>
