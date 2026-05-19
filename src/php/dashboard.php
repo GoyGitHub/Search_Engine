@@ -2,6 +2,8 @@
 require_once __DIR__ . '/auth.php';
 require_login();
 
+require_once __DIR__ . '/components.php';
+
 $BASE_URL = dirname($_SERVER['SCRIPT_NAME'], 3);
 if ($BASE_URL === DIRECTORY_SEPARATOR) {
     $BASE_URL = '';
@@ -67,26 +69,11 @@ $metrics = [
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dashboard</title>
+    <title>Dashboard - Procurement System</title>
     <link rel="stylesheet" href="<?php echo $BASE_URL; ?>/static/style.css">
 </head>
 <body>
-    <header class="site-header glass">
-        <div class="header-inner">
-            <a href="dashboard.php" class="brand">
-                <img src="<?php echo $BASE_URL; ?>/static/img/logo_montalban.png" alt="Company Logo" class="brand-logo">
-                <div class="brand-text">
-                    <span class="brand-title">Procurement Dashboard</span>
-                    <span class="brand-subtitle">Manage catalog actions from one place</span>
-                </div>
-            </a>
-            <nav class="header-actions">
-                <a href="dashboard.php" class="button ghost active">Dashboard</a>
-                <a href="logout.php" class="button ghost">Logout</a>
-                <span class="header-user">Signed in as <strong><?php echo htmlspecialchars(ucwords(strtolower($currentUser['username'] ?? 'Admin'))); ?></strong></span>
-            </nav>
-        </div>
-    </header>
+    <?php render_header($BASE_URL, $currentUser, "Dashboard"); ?>
 
     <main class="page-enter">
         <div class="container glass dashboard-shell">
@@ -140,5 +127,7 @@ $metrics = [
             </div>
         </div>
     </main>
+
+    <?php render_footer($BASE_URL); ?>
 </body>
 </html>
