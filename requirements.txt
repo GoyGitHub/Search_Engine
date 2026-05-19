@@ -2,3 +2,6 @@ Flask
 pandas
 openpyxl
 xlrd
+mysql-connector-python
+requests
+beautifulsoup4

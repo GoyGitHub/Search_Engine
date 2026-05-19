@@ -1,0 +1,808 @@
+[
+  {
+    "category": "Art Materials",
+    "brand": "Unknown",
+    "item_name": "NOTEBOOK",
+    "model": "",
+    "unit": "PCS",
+    "unit_cost": "15.0",
+    "specs": {
+      "qty": "50",
+      "total_cost": "750"
+    },
+    "source": "ABC TOURISM NATIONAL ARTS MONTH.xlsx / ABC (2)"
+  },
+  {
+    "category": "Art Materials",
+    "brand": "Unknown",
+    "item_name": "PENCIL",
+    "model": "",
+    "unit": "PCS",
+    "unit_cost": "15.0",
+    "specs": {
+      "qty": "50",
+      "total_cost": "750"
+    },
+    "source": "ABC TOURISM NATIONAL ARTS MONTH.xlsx / ABC (2)"
+  },
+  {
+    "category": "Art Materials",
+    "brand": "Unknown",
+    "item_name": "CRAYONS",
+    "model": "",
+    "unit": "PCS",
+    "unit_cost": "55.0",
+    "specs": {
+      "qty": "50",
+      "total_cost": "2750"
+    },
+    "source": "ABC TOURISM NATIONAL ARTS MONTH.xlsx / ABC (2)"
+  },
+  {
+    "category": "Art Materials",
+    "brand": "Unknown",
+    "item_name": "MARKERS",
+    "model": "",
+    "unit": "PCS",
+    "unit_cost": "79.0",
+    "specs": {
+      "qty": "50",
+      "total_cost": "3950"
+    },
+    "source": "ABC TOURISM NATIONAL ARTS MONTH.xlsx / ABC (2)"
+  },
+  {
+    "category": "Art Materials",
+    "brand": "Unknown",
+    "item_name": "PLASTIC ENVELOPE",
+    "model": "",
+    "unit": "PCS",
+    "unit_cost": "32.0",
+    "specs": {
+      "qty": "50",
+      "total_cost": "1600"
+    },
+    "source": "ABC TOURISM NATIONAL ARTS MONTH.xlsx / ABC (2)"
+  },
+  {
+    "category": "Art Materials",
+    "brand": "Unknown",
+    "item_name": "CRAFT PAPER",
+    "model": "",
+    "unit": "PCS",
+    "unit_cost": "7.0",
+    "specs": {
+      "qty": "50",
+      "total_cost": "350"
+    },
+    "source": "ABC TOURISM NATIONAL ARTS MONTH.xlsx / ABC (2)"
+  },
+  {
+    "category": "Art Materials",
+    "brand": "Unknown",
+    "item_name": "META CARD 10'S",
+    "model": "",
+    "unit": "PACKS",
+    "unit_cost": "65.0",
+    "specs": {
+      "qty": "200",
+      "total_cost": "13000"
+    },
+    "source": "ABC TOURISM NATIONAL ARTS MONTH.xlsx / ABC (2)"
+  },
+  {
+    "category": "Art Materials",
+    "brand": "Unknown",
+    "item_name": "WASHI TAPE",
+    "model": "",
+    "unit": "ROLLS",
+    "unit_cost": "65.0",
+    "specs": {
+      "qty": "50",
+      "total_cost": "3250"
+    },
+    "source": "ABC TOURISM NATIONAL ARTS MONTH.xlsx / ABC (2)"
+  },
+  {
+    "category": "Meals Food Pack",
+    "brand": "Unknown",
+    "item_name": "AM SNACKS",
+    "model": "",
+    "unit": "PAX",
+    "unit_cost": "120.0",
+    "specs": {
+      "qty": "70",
+      "total_cost": "8400"
+    },
+    "source": "ABC TOURISM NATIONAL ARTS MONTH.xlsx / ABC (2)"
+  },
+  {
+    "category": "Meals Food Pack",
+    "brand": "Unknown",
+    "item_name": "PM SNACKS",
+    "model": "",
+    "unit": "PAX",
+    "unit_cost": "120.0",
+    "specs": {
+      "qty": "70",
+      "total_cost": "8400"
+    },
+    "source": "ABC TOURISM NATIONAL ARTS MONTH.xlsx / ABC (2)"
+  },
+  {
+    "category": "Meals Food Pack",
+    "brand": "Unknown",
+    "item_name": "AM SNACKS",
+    "model": "",
+    "unit": "PAX",
+    "unit_cost": "120.0",
+    "specs": {
+      "qty": "70",
+      "total_cost": "8400"
+    },
+    "source": "ABC TOURISM NATIONAL ARTS MONTH.xlsx / ABC (3)"
+  },
+  {
+    "category": "Meals Food Pack",
+    "brand": "Unknown",
+    "item_name": "PM SNACKS",
+    "model": "",
+    "unit": "PAX",
+    "unit_cost": "120.0",
+    "specs": {
+      "qty": "70",
+      "total_cost": "8400"
+    },
+    "source": "ABC TOURISM NATIONAL ARTS MONTH.xlsx / ABC (3)"
+  },
+  {
+    "category": "Office Supplies",
+    "brand": "Unknown",
+    "item_name": "LONG BOND PAPERS",
+    "model": "",
+    "unit": "BOXES",
+    "unit_cost": "0.0",
+    "specs": {
+      "qty": "10",
+      "total_cost": "0"
+    },
+    "source": "ABC TOURISM NATIONAL ARTS MONTH.xlsx / ABC (4)"
+  },
+  {
+    "category": "Office Supplies",
+    "brand": "Unknown",
+    "item_name": "A4 BOND PAPERS",
+    "model": "",
+    "unit": "BOXES",
+    "unit_cost": "0.0",
+    "specs": {
+      "qty": "10",
+      "total_cost": "0"
+    },
+    "source": "ABC TOURISM NATIONAL ARTS MONTH.xlsx / ABC (4)"
+  },
+  {
+    "category": "Office Supplies",
+    "brand": "Unknown",
+    "item_name": "LONG FOLDERS",
+    "model": "",
+    "unit": "PIECES",
+    "unit_cost": "0.0",
+    "specs": {
+      "qty": "100",
+      "total_cost": "0"
+    },
+    "source": "ABC TOURISM NATIONAL ARTS MONTH.xlsx / ABC (4)"
+  },
+  {
+    "category": "Office Supplies",
+    "brand": "Unknown",
+    "item_name": "ASSORTED COLOR PAPERS (10 COLORS - 50 PCS. EACH COLOR)",
+    "model": "",
+    "unit": "PIECES",
+    "unit_cost": "0.0",
+    "specs": {
+      "qty": "500",
+      "total_cost": "0"
+    },
+    "source": "ABC TOURISM NATIONAL ARTS MONTH.xlsx / ABC (4)"
+  },
+  {
+    "category": "Office Supplies",
+    "brand": "Unknown",
+    "item_name": "BLACK BALLPENS - FLEXSTICK PEN 0.7 (FO-GELB08)",
+    "model": "",
+    "unit": "BOXES",
+    "unit_cost": "0.0",
+    "specs": {
+      "qty": "20",
+      "total_cost": "0"
+    },
+    "source": "ABC TOURISM NATIONAL ARTS MONTH.xlsx / ABC (4)"
+  },
+  {
+    "category": "Office Supplies",
+    "brand": "Unknown",
+    "item_name": "BLUE BALLPEN - FLEXSTICK PEN 0.7 (FO-GELB08)",
+    "model": "",
+    "unit": "BOXES",
+    "unit_cost": "0.0",
+    "specs": {
+      "qty": "10",
+      "total_cost": "0"
+    },
+    "source": "ABC TOURISM NATIONAL ARTS MONTH.xlsx / ABC (4)"
+  },
+  {
+    "category": "Office Supplies",
+    "brand": "Unknown",
+    "item_name": "RED BALLPENS - FLEXSTICK PEN 0.7 (FO-GELB08)",
+    "model": "",
+    "unit": "BOXES",
+    "unit_cost": "0.0",
+    "specs": {
+      "qty": "10",
+      "total_cost": "0"
+    },
+    "source": "ABC TOURISM NATIONAL ARTS MONTH.xlsx / ABC (4)"
+  },
+  {
+    "category": "Office Supplies",
+    "brand": "Unknown",
+    "item_name": "CORRECTION TAPES",
+    "model": "",
+    "unit": "PIECES",
+    "unit_cost": "0.0",
+    "specs": {
+      "qty": "100",
+      "total_cost": "0"
+    },
+    "source": "ABC TOURISM NATIONAL ARTS MONTH.xlsx / ABC (4)"
+  },
+  {
+    "category": "Office Supplies",
+    "brand": "Unknown",
+    "item_name": "HEAVY DUTY STAPLER - JOY",
+    "model": "",
+    "unit": "PIECES",
+    "unit_cost": "0.0",
+    "specs": {
+      "qty": "20",
+      "total_cost": "0"
+    },
+    "source": "ABC TOURISM NATIONAL ARTS MONTH.xlsx / ABC (4)"
+  },
+  {
+    "category": "Office Supplies",
+    "brand": "Unknown",
+    "item_name": "STAMP PAD INK - BLACK",
+    "model": "",
+    "unit": "PIECES",
+    "unit_cost": "0.0",
+    "specs": {
+      "qty": "10",
+      "total_cost": "0"
+    },
+    "source": "ABC TOURISM NATIONAL ARTS MONTH.xlsx / ABC (4)"
+  },
+  {
+    "category": "Office Supplies",
+    "brand": "Unknown",
+    "item_name": "STAMP PAD INK - VIOLET",
+    "model": "",
+    "unit": "PIECES",
+    "unit_cost": "0.0",
+    "specs": {
+      "qty": "5",
+      "total_cost": "0"
+    },
+    "source": "ABC TOURISM NATIONAL ARTS MONTH.xlsx / ABC (4)"
+  },
+  {
+    "category": "Office Supplies",
+    "brand": "Unknown",
+    "item_name": "PAPER CLIPS (VINYL - 50MM)",
+    "model": "",
+    "unit": "BOXES",
+    "unit_cost": "0.0",
+    "specs": {
+      "qty": "10",
+      "total_cost": "0"
+    },
+    "source": "ABC TOURISM NATIONAL ARTS MONTH.xlsx / ABC (4)"
+  },
+  {
+    "category": "Office Supplies",
+    "brand": "Unknown",
+    "item_name": "DONG-A MY-GEL 0.5 PEN - BLUE",
+    "model": "",
+    "unit": "BOXES",
+    "unit_cost": "0.0",
+    "specs": {
+      "qty": "3",
+      "total_cost": "0"
+    },
+    "source": "ABC TOURISM NATIONAL ARTS MONTH.xlsx / ABC (4)"
+  },
+  {
+    "category": "Office Supplies",
+    "brand": "Unknown",
+    "item_name": "DONG-A MY-GEL 0.5 PEN - BLACK",
+    "model": "",
+    "unit": "BOXES",
+    "unit_cost": "0.0",
+    "specs": {
+      "qty": "10",
+      "total_cost": "0"
+    },
+    "source": "ABC TOURISM NATIONAL ARTS MONTH.xlsx / ABC (4)"
+  },
+  {
+    "category": "Office Supplies",
+    "brand": "Unknown",
+    "item_name": "MONGOL PENCIL NO.2",
+    "model": "",
+    "unit": "BOXES",
+    "unit_cost": "0.0",
+    "specs": {
+      "qty": "2",
+      "total_cost": "0"
+    },
+    "source": "ABC TOURISM NATIONAL ARTS MONTH.xlsx / ABC (4)"
+  },
+  {
+    "category": "Office Supplies",
+    "brand": "Unknown",
+    "item_name": "ACER KEYBOARDS",
+    "model": "",
+    "unit": "UNITS",
+    "unit_cost": "0.0",
+    "specs": {
+      "qty": "5",
+      "total_cost": "0"
+    },
+    "source": "ABC TOURISM NATIONAL ARTS MONTH.xlsx / ABC (4)"
+  },
+  {
+    "category": "Office Supplies",
+    "brand": "Unknown",
+    "item_name": "PAPER SHREDDER MACHINE - AUTOMATIC 20L",
+    "model": "",
+    "unit": "UNIT",
+    "unit_cost": "0.0",
+    "specs": {
+      "qty": "1",
+      "total_cost": "0"
+    },
+    "source": "ABC TOURISM NATIONAL ARTS MONTH.xlsx / ABC (4)"
+  },
+  {
+    "category": "Office Supplies",
+    "brand": "Unknown",
+    "item_name": "DATER",
+    "model": "",
+    "unit": "PIECES",
+    "unit_cost": "0.0",
+    "specs": {
+      "qty": "10",
+      "total_cost": "0"
+    },
+    "source": "ABC TOURISM NATIONAL ARTS MONTH.xlsx / ABC (4)"
+  },
+  {
+    "category": "Office Supplies",
+    "brand": "Unknown",
+    "item_name": "EPSON L5290 ECOTANK INK - BLACK",
+    "model": "",
+    "unit": "BOTTLES",
+    "unit_cost": "0.0",
+    "specs": {
+      "qty": "25",
+      "total_cost": "0"
+    },
+    "source": "ABC TOURISM NATIONAL ARTS MONTH.xlsx / ABC (4)"
+  },
+  {
+    "category": "Office Supplies",
+    "brand": "Unknown",
+    "item_name": "EPSON L5290 ECOTANK INK - COLORED (10 BOTTLES PER COLOR - YELLOW / MAGENTA / CYAN",
+    "model": "",
+    "unit": "BOTTLES",
+    "unit_cost": "0.0",
+    "specs": {
+      "qty": "30",
+      "total_cost": "0"
+    },
+    "source": "ABC TOURISM NATIONAL ARTS MONTH.xlsx / ABC (4)"
+  },
+  {
+    "category": "Office Supplies",
+    "brand": "Unknown",
+    "item_name": "TRANSPARENT TAPE - 1 INCH",
+    "model": "",
+    "unit": "PIECES",
+    "unit_cost": "0.0",
+    "specs": {
+      "qty": "25",
+      "total_cost": "0"
+    },
+    "source": "ABC TOURISM NATIONAL ARTS MONTH.xlsx / ABC (4)"
+  },
+  {
+    "category": "Office Supplies",
+    "brand": "Unknown",
+    "item_name": "DOUBLE SIZED TAPE - 2 INCHES",
+    "model": "",
+    "unit": "PIECES",
+    "unit_cost": "0.0",
+    "specs": {
+      "qty": "50",
+      "total_cost": "0"
+    },
+    "source": "ABC TOURISM NATIONAL ARTS MONTH.xlsx / ABC (4)"
+  },
+  {
+    "category": "Office Supplies",
+    "brand": "Unknown",
+    "item_name": "DOUBLE SIZED TAPE - 1/2 INCHES",
+    "model": "",
+    "unit": "PIECES",
+    "unit_cost": "0.0",
+    "specs": {
+      "qty": "50",
+      "total_cost": "0"
+    },
+    "source": "ABC TOURISM NATIONAL ARTS MONTH.xlsx / ABC (4)"
+  },
+  {
+    "category": "Office Supplies",
+    "brand": "Unknown",
+    "item_name": "LAMINATOR PLASTIC A4",
+    "model": "",
+    "unit": "PIECES",
+    "unit_cost": "0.0",
+    "specs": {
+      "qty": "100",
+      "total_cost": "0"
+    },
+    "source": "ABC TOURISM NATIONAL ARTS MONTH.xlsx / ABC (4)"
+  },
+  {
+    "category": "Office Supplies",
+    "brand": "Unknown",
+    "item_name": "COMPACT DISC",
+    "model": "",
+    "unit": "PIECES",
+    "unit_cost": "0.0",
+    "specs": {
+      "qty": "25",
+      "total_cost": "0"
+    },
+    "source": "ABC TOURISM NATIONAL ARTS MONTH.xlsx / ABC (4)"
+  },
+  {
+    "category": "Office Supplies",
+    "brand": "Unknown",
+    "item_name": "HEAVY DUTY GANG EXTENSION CORD - 10M (6 SLOTS, ON/OFF BUTTON - FOR SATELLITE REGISTRATION USE)",
+    "model": "",
+    "unit": "PIECES",
+    "unit_cost": "0.0",
+    "specs": {
+      "qty": "5",
+      "total_cost": "0"
+    },
+    "source": "ABC TOURISM NATIONAL ARTS MONTH.xlsx / ABC (4)"
+  },
+  {
+    "category": "Office Supplies",
+    "brand": "Unknown",
+    "item_name": "PUNCHER - HEAVY DUTY",
+    "model": "",
+    "unit": "PIECES",
+    "unit_cost": "0.0",
+    "specs": {
+      "qty": "10",
+      "total_cost": "0"
+    },
+    "source": "ABC TOURISM NATIONAL ARTS MONTH.xlsx / ABC (4)"
+  },
+  {
+    "category": "Office Supplies",
+    "brand": "Unknown",
+    "item_name": "COMPUTER MOUSE",
+    "model": "",
+    "unit": "PIECES",
+    "unit_cost": "0.0",
+    "specs": {
+      "qty": "5",
+      "total_cost": "0"
+    },
+    "source": "ABC TOURISM NATIONAL ARTS MONTH.xlsx / ABC (4)"
+  },
+  {
+    "category": "Office Supplies",
+    "brand": "Unknown",
+    "item_name": "MOUSE PAD - SIZE; 8 X 13",
+    "model": "",
+    "unit": "PIECES",
+    "unit_cost": "0.0",
+    "specs": {
+      "qty": "8",
+      "total_cost": "0"
+    },
+    "source": "ABC TOURISM NATIONAL ARTS MONTH.xlsx / ABC (4)"
+  },
+  {
+    "category": "Office Supplies",
+    "brand": "Unknown",
+    "item_name": "PAPER FASTENER - METAL (DIAMOND BRAND)",
+    "model": "",
+    "unit": "BOXES",
+    "unit_cost": "0.0",
+    "specs": {
+      "qty": "5",
+      "total_cost": "0"
+    },
+    "source": "ABC TOURISM NATIONAL ARTS MONTH.xlsx / ABC (4)"
+  },
+  {
+    "category": "Office Supplies",
+    "brand": "Unknown",
+    "item_name": "ANTI-SLIP TABLE TOP MESH PAD - BEIGE COLOR",
+    "model": "",
+    "unit": "ROLLS",
+    "unit_cost": "0.0",
+    "specs": {
+      "qty": "4",
+      "total_cost": "0"
+    },
+    "source": "ABC TOURISM NATIONAL ARTS MONTH.xlsx / ABC (4)"
+  },
+  {
+    "category": "Office Supplies",
+    "brand": "Unknown",
+    "item_name": "BULLETIN BOARD WITH STAND - SIZE; 4 X 8 FEET",
+    "model": "",
+    "unit": "PIECE",
+    "unit_cost": "0.0",
+    "specs": {
+      "qty": "1",
+      "total_cost": "0"
+    },
+    "source": "ABC TOURISM NATIONAL ARTS MONTH.xlsx / ABC (4)"
+  },
+  {
+    "category": "Office Supplies",
+    "brand": "Unknown",
+    "item_name": "STAPLE GUN TACKER - HEAVY DUTY",
+    "model": "",
+    "unit": "PIECE",
+    "unit_cost": "0.0",
+    "specs": {
+      "qty": "1",
+      "total_cost": "0"
+    },
+    "source": "ABC TOURISM NATIONAL ARTS MONTH.xlsx / ABC (4)"
+  },
+  {
+    "category": "Office Supplies",
+    "brand": "Unknown",
+    "item_name": "LOUISEVILLE FIBER LADDIE - 5 STEPS",
+    "model": "",
+    "unit": "PIECE",
+    "unit_cost": "0.0",
+    "specs": {
+      "qty": "1",
+      "total_cost": "0"
+    },
+    "source": "ABC TOURISM NATIONAL ARTS MONTH.xlsx / ABC (4)"
+  },
+  {
+    "category": "Office Supplies",
+    "brand": "Unknown",
+    "item_name": "DUPLO MASTER ROLL - DRA12 B4 SIZE",
+    "model": "",
+    "unit": "ROLLS",
+    "unit_cost": "0.0",
+    "specs": {
+      "qty": "3",
+      "total_cost": "0"
+    },
+    "source": "ABC TOURISM NATIONAL ARTS MONTH.xlsx / ABC (4)"
+  },
+  {
+    "category": "Office Supplies",
+    "brand": "Unknown",
+    "item_name": "DUPLO INK - DA24 BLACK (600 ML)",
+    "model": "",
+    "unit": "BOXES",
+    "unit_cost": "0.0",
+    "specs": {
+      "qty": "10",
+      "total_cost": "0"
+    },
+    "source": "ABC TOURISM NATIONAL ARTS MONTH.xlsx / ABC (4)"
+  },
+  {
+    "category": "Office Supplies",
+    "brand": "Unknown",
+    "item_name": "PROTECTIVE MASK - SURGICAL (BLUE)",
+    "model": "",
+    "unit": "BOXES",
+    "unit_cost": "0.0",
+    "specs": {
+      "qty": "8",
+      "total_cost": "0"
+    },
+    "source": "ABC TOURISM NATIONAL ARTS MONTH.xlsx / ABC (4)"
+  },
+  {
+    "category": "Office Supplies",
+    "brand": "Unknown",
+    "item_name": "FOLDED PAPER TOWELS (RECTANGLE)",
+    "model": "",
+    "unit": "PACKS",
+    "unit_cost": "0.0",
+    "specs": {
+      "qty": "100",
+      "total_cost": "0"
+    },
+    "source": "ABC TOURISM NATIONAL ARTS MONTH.xlsx / ABC (4)"
+  },
+  {
+    "category": "Office Supplies",
+    "brand": "Unknown",
+    "item_name": "ALCOHOL (ISOPROPYL)",
+    "model": "",
+    "unit": "GALLONS",
+    "unit_cost": "0.0",
+    "specs": {
+      "qty": "20",
+      "total_cost": "0"
+    },
+    "source": "ABC TOURISM NATIONAL ARTS MONTH.xlsx / ABC (4)"
+  },
+  {
+    "category": "Office Supplies",
+    "brand": "Unknown",
+    "item_name": "ZONROX BLEACH",
+    "model": "",
+    "unit": "GALLONS",
+    "unit_cost": "0.0",
+    "specs": {
+      "qty": "7",
+      "total_cost": "0"
+    },
+    "source": "ABC TOURISM NATIONAL ARTS MONTH.xlsx / ABC (4)"
+  },
+  {
+    "category": "Office Supplies",
+    "brand": "Unknown",
+    "item_name": "JOY DISWASHING LIQUID",
+    "model": "",
+    "unit": "GALLONS",
+    "unit_cost": "0.0",
+    "specs": {
+      "qty": "5",
+      "total_cost": "0"
+    },
+    "source": "ABC TOURISM NATIONAL ARTS MONTH.xlsx / ABC (4)"
+  },
+  {
+    "category": "Office Supplies",
+    "brand": "Unknown",
+    "item_name": "DISWASHING SPONGE",
+    "model": "",
+    "unit": "PIECES",
+    "unit_cost": "0.0",
+    "specs": {
+      "qty": "10",
+      "total_cost": "0"
+    },
+    "source": "ABC TOURISM NATIONAL ARTS MONTH.xlsx / ABC (4)"
+  },
+  {
+    "category": "Office Supplies",
+    "brand": "Unknown",
+    "item_name": "SPINNING FLOOR MOP",
+    "model": "",
+    "unit": "PIECE",
+    "unit_cost": "0.0",
+    "specs": {
+      "qty": "1",
+      "total_cost": "0"
+    },
+    "source": "ABC TOURISM NATIONAL ARTS MONTH.xlsx / ABC (4)"
+  },
+  {
+    "category": "Office Supplies",
+    "brand": "Unknown",
+    "item_name": "EXTRA SPINNING MOP HEAD",
+    "model": "",
+    "unit": "PIECES",
+    "unit_cost": "0.0",
+    "specs": {
+      "qty": "5",
+      "total_cost": "0"
+    },
+    "source": "ABC TOURISM NATIONAL ARTS MONTH.xlsx / ABC (4)"
+  },
+  {
+    "category": "Office Supplies",
+    "brand": "Unknown",
+    "item_name": "BROOM",
+    "model": "",
+    "unit": "PIECES",
+    "unit_cost": "0.0",
+    "specs": {
+      "qty": "4",
+      "total_cost": "0"
+    },
+    "source": "ABC TOURISM NATIONAL ARTS MONTH.xlsx / ABC (4)"
+  },
+  {
+    "category": "Office Supplies",
+    "brand": "Unknown",
+    "item_name": "DUST PAN",
+    "model": "",
+    "unit": "PIECES",
+    "unit_cost": "0.0",
+    "specs": {
+      "qty": "2",
+      "total_cost": "0"
+    },
+    "source": "ABC TOURISM NATIONAL ARTS MONTH.xlsx / ABC (4)"
+  },
+  {
+    "category": "Office Supplies",
+    "brand": "Unknown",
+    "item_name": "ROUND SMALL RAGS",
+    "model": "",
+    "unit": "PIECES",
+    "unit_cost": "0.0",
+    "specs": {
+      "qty": "200",
+      "total_cost": "0"
+    },
+    "source": "ABC TOURISM NATIONAL ARTS MONTH.xlsx / ABC (4)"
+  },
+  {
+    "category": "Office Supplies",
+    "brand": "Unknown",
+    "item_name": "HEAVY DUTY BIG PLASTIC CONTAINER BOX - FOR SATELLITE REGISTRATION USE) - 163 ML",
+    "model": "",
+    "unit": "PIECES",
+    "unit_cost": "0.0",
+    "specs": {
+      "qty": "3",
+      "total_cost": "0"
+    },
+    "source": "ABC TOURISM NATIONAL ARTS MONTH.xlsx / ABC (4)"
+  },
+  {
+    "category": "Office Supplies",
+    "brand": "Unknown",
+    "item_name": "MARBLE WALLPAPER ADHESIVE PVC WATERPROOF WALLPAPER DESIGN WALL DÉCOR (3MM THICK / 245 X 120 CM)",
+    "model": "",
+    "unit": "PIECES",
+    "unit_cost": "0.0",
+    "specs": {
+      "qty": "300",
+      "total_cost": "0"
+    },
+    "source": "ABC TOURISM NATIONAL ARTS MONTH.xlsx / ABC (4)"
+  },
+  {
+    "category": "Office Supplies",
+    "brand": "Unknown",
+    "item_name": "STRIPE WOOD GRAIN PVC SELF ADHESIVE WATERPROOF WALLPAPER WOOD FLUTE DESIGN WALL DÉCOR (60 X 300CM)",
+    "model": "",
+    "unit": "PIECES",
+    "unit_cost": "0.0",
+    "specs": {
+      "qty": "100",
+      "total_cost": "0"
+    },
+    "source": "ABC TOURISM NATIONAL ARTS MONTH.xlsx / ABC (4)"
+  }
+]
