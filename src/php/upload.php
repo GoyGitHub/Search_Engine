@@ -75,7 +75,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <main class="page-enter">
         <div class="container narrow glass">
             <div class="page-actions">
-                <a href="dashboard.php" class="button secondary icon-btn"><span>↩</span> Back to Dashboard</a>
+                <a href="dashboard.php" class="button secondary">Back to Dashboard</a>
             </div>
             <h1>Upload Excel File</h1>
             <p class="subtitle">Only admins may upload Excel files for the shared item table.</p>
@@ -87,7 +87,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
             <form action="upload.php" method="POST" enctype="multipart/form-data" class="upload-form card">
                 <input type="file" name="excel_file" accept=".xlsx,.xls" required>
-                <button type="submit" class="button icon-btn"><span>📥</span> Upload and Refresh</button>
+                <button type="submit" class="button">Upload and Refresh</button>
             </form>
         </div>
     </main>

@@ -51,7 +51,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     Password
                     <input type="password" name="password" required>
                 </label>
-                <button type="submit" class="button icon-btn"><span>🔐</span> Sign In</button>
+                <button type="submit" class="button">Sign In</button>
             </form>
         </div>
     </main>

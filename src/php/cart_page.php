@@ -40,40 +40,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
 $cart = get_cart();
 $cart_stats = get_cart_stats();
-$abc_classification = get_abc_classification($cart);
-
-// Ensure proper layout for cart items
-function render_cart_items($cart) {
-    $output = '';
-    foreach ($cart as $key => $item_data) {
-        $item = $item_data['item'];
-        $quantity = $item_data['quantity'];
-        $variation = $item_data['variation'] ?? [];
-        $output .= '<div class="cart-item">';
-        $output .= '<div class="item-details">';
-        $output .= '<h4>' . htmlspecialchars($item['item_name']) . '</h4>';
-        $output .= '<p>Category: ' . htmlspecialchars($item['category']) . '</p>';
-        $output .= '<p>Brand: ' . htmlspecialchars($item['brand']) . '</p>';
-        if (!empty($variation)) {
-            $output .= '<p>Variation: ' . htmlspecialchars(json_encode($variation)) . '</p>';
-        }
-        $output .= '<p>Quantity: ' . $quantity . '</p>';
-        $output .= '<p>Price: ' . formatCurrency($item['unit_cost']) . '</p>';
-        $output .= '</div>';
-        $output .= '<div class="item-actions">';
-        $output .= '<form method="POST">';
-        $output .= '<input type="hidden" name="action" value="remove">';
-        $output .= '<input type="hidden" name="item_key" value="' . htmlspecialchars($key) . '">';
-        $output .= '<button type="submit" class="button danger">Remove</button>';
-        $output .= '</form>';
-        $output .= '</div>';
-        $output .= '</div>';
-    }
-    return $output;
-}
-
-// Render cart items
-$cart_items_html = render_cart_items($cart);
 
 function formatCurrency($value)
 {
@@ -94,17 +60,17 @@ function formatCurrency($value)
     <script src="<?php echo $BASE_URL; ?>/static/accessibility.js" defer></script>
 </head>
 <body>
-    <?php render_header($BASE_URL, $currentUser, "Shopping Cart"); ?>
+    <?php render_header($BASE_URL, $currentUser); ?>
 
     <main class="page-enter">
         <div class="container glass">
             <div class="page-actions">
-                <a href="index.php" class="button secondary icon-btn"><span>⬅</span> Back to Catalog</a>
+                <a href="index.php" class="button secondary">Back to Catalog</a>
             </div>
 
             <section class="hero-grid">
                 <div class="hero-copy">
-                    <h1>🛒 Shopping Cart</h1>
+                    <h1>Shopping Cart</h1>
                     <p class="subtitle">Review and manage your selected items below.</p>
                 </div>
             </section>
@@ -143,7 +109,6 @@ function formatCurrency($value)
                                 <div class="cart-items-table">
                                     <?php foreach ($items as $item_key => $item_data): 
                                         $item = $item_data['item'];
-                                        $variation = $item_data['variation'];
                                         $quantity = $item_data['quantity'];
                                         $unit_cost = floatval($item['unit_cost'] ?? 0);
                                         $item_total = $unit_cost * $quantity;
@@ -152,9 +117,6 @@ function formatCurrency($value)
                                             <div class="item-info">
                                                 <div class="item-header">
                                                     <strong><?php echo htmlspecialchars($item['item_name']); ?></strong>
-                                                    <?php if ($variation): ?>
-                                                        <span class="variation-tag"><?php echo htmlspecialchars($variation['name']); ?></span>
-                                                    <?php endif; ?>
                                                 </div>
                                                 <div class="item-meta">
                                                     <span class="item-detail">Brand: <?php echo htmlspecialchars($item['brand'] ?? 'Unknown'); ?></span>
@@ -187,38 +149,6 @@ function formatCurrency($value)
                         <?php endforeach; ?>
                     </section>
 
-                    <!-- ABC Classification Section -->
-                    <section class="cart-section">
-                        <h2>ABC Classification</h2>
-                        <div class="abc-grid">
-                            <?php 
-                            $abc_labels = [
-                                'A' => ['label' => 'Always', 'desc' => 'High priority items (80% of cost)', 'class' => 'abc-a'],
-                                'B' => ['label' => 'Better', 'desc' => 'Medium priority items (15% of cost)', 'class' => 'abc-b'],
-                                'C' => ['label' => 'Critical', 'desc' => 'Low priority items (5% of cost)', 'class' => 'abc-c'],
-                            ];
-                            
-                            foreach (['A', 'B', 'C'] as $class): ?>
-                                <div class="abc-card <?php echo $abc_labels[$class]['class']; ?>">
-                                    <h3><?php echo $abc_labels[$class]['label']; ?> - <?php echo $class; ?></h3>
-                                    <p class="desc"><?php echo $abc_labels[$class]['desc']; ?></p>
-                                    <div class="items-list">
-                                        <?php if (!empty($abc_classification[$class])): ?>
-                                            <?php foreach ($abc_classification[$class] as $item_data): ?>
-                                                <div class="abc-item">
-                                                    <span class="name"><?php echo htmlspecialchars($item_data['name']); ?></span>
-                                                    <span class="cost"><?php echo formatCurrency($item_data['total']); ?></span>
-                                                </div>
-                                            <?php endforeach; ?>
-                                        <?php else: ?>
-                                            <p class="empty">No items in this category</p>
-                                        <?php endif; ?>
-                                    </div>
-                                </div>
-                            <?php endforeach; ?>
-                        </div>
-                    </section>
-
                     <!-- Cart Actions -->
                     <section class="cart-actions">
                         <div class="summary">
@@ -237,7 +167,7 @@ function formatCurrency($value)
                         </div>
                         
                         <div class="actions-buttons">
-                            <a href="abc_generator.php" class="button primary"><span>📄</span> Generate ABC Document</a>
+                            <a href="abc_generator.php" class="button primary">Generate Budget Excel</a>
                             <form method="POST" style="display: inline;">
                                 <input type="hidden" name="action" value="clear">
                                 <button type="submit" class="button danger" onclick="return confirm('Are you sure you want to clear the cart?');">Clear Cart</button>

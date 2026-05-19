@@ -2,6 +2,8 @@
 require_once __DIR__ . '/auth.php';
 require_login();
 
+require_once __DIR__ . '/cart.php';
+require_once __DIR__ . '/catalog.php';
 require_once __DIR__ . '/components.php';
 
 $BASE_URL = dirname($_SERVER['SCRIPT_NAME'], 3);
@@ -9,32 +11,8 @@ if ($BASE_URL === DIRECTORY_SEPARATOR) {
     $BASE_URL = '';
 }
 
-function load_items_from_json(): array
-{
-    $jsonFile = dirname(__DIR__, 2) . '/excel_files/items.json';
-    if (!file_exists($jsonFile)) {
-        return [];
-    }
 
-    $contents = file_get_contents($jsonFile);
-    $items = json_decode($contents, true);
-    return is_array($items) ? $items : [];
-}
-
-function unique_values(array $items, string $key): array
-{
-    $values = [];
-    foreach ($items as $itemsRow) {
-        $value = trim((string)($itemsRow[$key] ?? ''));
-        if ($value !== '' && !in_array($value, $values, true)) {
-            $values[] = $value;
-        }
-    }
-    sort($values);
-    return $values;
-}
-
-function most_common_categories(array $items, int $limit = 5): array
+function most_common_categories(array $items, int $limit = 6): array
 {
     $counts = [];
     foreach ($items as $item) {
@@ -48,21 +26,23 @@ function most_common_categories(array $items, int $limit = 5): array
     return array_slice($counts, 0, $limit, true);
 }
 
-$items = load_items_from_json();
+function format_dashboard_currency(float $value): string
+{
+    return '₱ ' . number_format($value, 2);
+}
+
+$items = load_catalog_items();
 $totalItems = count($items);
-$categories = unique_values($items, 'category');
-$brands = unique_values($items, 'brand');
+$categories = catalog_unique_values($items, 'category');
+$brands = catalog_unique_values($items, 'brand');
 $topCategories = most_common_categories($items, 6);
+$maxCategoryCount = $topCategories ? max($topCategories) : 1;
 
-$recentItems = array_slice(array_reverse($items), 0, 5);
+$recentItems = array_slice(array_reverse($items), 0, 6);
 $currentUser = current_user();
+$cartStats = get_cart_stats();
+$displayName = htmlspecialchars(ucwords(strtolower($currentUser['username'] ?? 'User')));
 
-$metrics = [
-    ['label' => 'Total Items', 'value' => $totalItems],
-    ['label' => 'Categories', 'value' => count($categories)],
-    ['label' => 'Brands', 'value' => count($brands)],
-    ['label' => 'Excel Files', 'value' => 1],
-];
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -72,59 +52,112 @@ $metrics = [
     <title>Dashboard - Procurement System</title>
     <link rel="stylesheet" href="<?php echo $BASE_URL; ?>/static/style.css">
 </head>
-<body>
+<body class="dashboard-page">
     <?php render_header($BASE_URL, $currentUser, "Dashboard"); ?>
 
     <main class="page-enter">
-        <div class="container glass dashboard-shell">
-            <section class="dashboard-hero">
-                <div>
-                    <p class="overline">Welcome back</p>
-                    <h1>Procurement Control Center</h1>
-                    <p class="subtitle">A modern dashboard for your item catalog, upload pipeline, and quick actions.</p>
+        <div class="dashboard-layout">
+            <section class="dashboard-welcome">
+                <div class="dashboard-welcome-copy">
+                    <p class="overline">Procurement overview</p>
+                    <h1>Good day, <?php echo $displayName; ?></h1>
+                    <p class="subtitle">Monitor catalog health, cart activity, and budget exports from one place.</p>
                 </div>
-                <div class="dashboard-actions">
-                    <a href="add_item.php" class="button icon-btn"><span>➕</span> Add Item</a>
-                    <a href="index.php" class="button secondary icon-btn"><span>📋</span> View Items</a>
-                    <a href="upload.php" class="button ghost icon-btn"><span>📤</span> Upload Sheet</a>
+                <div class="dashboard-welcome-actions">
+                    <a href="index.php" class="button">Open Catalog</a>
+                    <a href="abc_generator.php" class="button secondary">Generate Excel</a>
                 </div>
             </section>
 
-            <div class="metrics-grid">
-                <?php foreach ($metrics as $metric): ?>
-                    <div class="metric-card">
-                        <small><?php echo htmlspecialchars($metric['label']); ?></small>
-                        <span><?php echo htmlspecialchars((string)$metric['value']); ?></span>
+            <section class="metrics-grid dashboard-metrics">
+                <article class="metric-card accent-catalog">
+                    <p class="metric-label">Catalog items</p>
+                    <p class="metric-value"><?php echo number_format($totalItems); ?></p>
+                    <p class="metric-hint">Available in the master list</p>
+                </article>
+                <article class="metric-card accent-category">
+                    <p class="metric-label">Categories</p>
+                    <p class="metric-value"><?php echo number_format(count($categories)); ?></p>
+                    <p class="metric-hint">Used for Excel grouping</p>
+                </article>
+                <article class="metric-card accent-brand">
+                    <p class="metric-label">Brands</p>
+                    <p class="metric-value"><?php echo number_format(count($brands)); ?></p>
+                    <p class="metric-hint">Across all catalog rows</p>
+                </article>
+                <article class="metric-card accent-cart">
+                    <p class="metric-label">Cart total</p>
+                    <p class="metric-value"><?php echo format_dashboard_currency((float)$cartStats['total_cost']); ?></p>
+                    <p class="metric-hint"><?php echo (int)$cartStats['item_count']; ?> items · <?php echo (int)$cartStats['total_items']; ?> qty</p>
+                </article>
+            </section>
+
+            <section class="dashboard-panels">
+                <article class="dashboard-panel panel-wide">
+                    <div class="panel-head">
+                        <h2>Category distribution</h2>
+                        <span class="panel-meta">Top groups in catalog</span>
                     </div>
-                <?php endforeach; ?>
-            </div>
-
-            <div class="dashboard-grid">
-                <section class="dashboard-card">
-                    <h2>Top Categories</h2>
-                    <ul>
-                        <?php foreach ($topCategories as $category => $count): ?>
-                            <li><strong><?php echo htmlspecialchars($category); ?></strong><span><?php echo htmlspecialchars((string)$count); ?> items</span></li>
-                        <?php endforeach; ?>
-                    </ul>
-                </section>
-
-                <section class="dashboard-card">
-                    <h2>Recent Items</h2>
-                    <div class="recent-list">
-                        <?php if (empty($recentItems)): ?>
-                            <p>No items yet.</p>
+                    <div class="bar-chart">
+                        <?php if (empty($topCategories)): ?>
+                            <p class="panel-empty">No category data yet. Upload a catalog to populate this chart.</p>
                         <?php else: ?>
-                            <?php foreach ($recentItems as $item): ?>
-                                <div class="recent-row">
-                                    <strong><?php echo htmlspecialchars($item['item_name'] ?? ''); ?></strong>
-                                    <span><?php echo htmlspecialchars($item['category'] ?? ''); ?></span>
+                            <?php foreach ($topCategories as $category => $count): ?>
+                                <?php $width = max(8, round(($count / $maxCategoryCount) * 100)); ?>
+                                <div class="bar-row">
+                                    <span class="bar-label"><?php echo htmlspecialchars($category); ?></span>
+                                    <div class="bar-track">
+                                        <div class="bar-fill" style="width: <?php echo $width; ?>%;"></div>
+                                    </div>
+                                    <span class="bar-value"><?php echo (int)$count; ?></span>
                                 </div>
                             <?php endforeach; ?>
                         <?php endif; ?>
                     </div>
-                </section>
-            </div>
+                </article>
+
+                <article class="dashboard-panel panel-wide">
+                    <div class="panel-head">
+                        <h2>Recent catalog entries</h2>
+                        <a href="index.php" class="panel-link">View all</a>
+                    </div>
+                    <?php if (empty($recentItems)): ?>
+                        <p class="panel-empty">No catalog items loaded yet.</p>
+                    <?php else: ?>
+                        <div class="data-table-wrap">
+                            <table class="data-table">
+                                <thead>
+                                    <tr>
+                                        <th>Item</th>
+                                        <th>Category</th>
+                                        <th>Brand</th>
+                                        <th>Unit</th>
+                                        <th class="num">Price</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <?php foreach ($recentItems as $item): ?>
+                                        <tr>
+                                            <td><strong><?php echo htmlspecialchars($item['item_name'] ?? ''); ?></strong></td>
+                                            <td><?php echo htmlspecialchars($item['category'] ?? ''); ?></td>
+                                            <td><?php echo htmlspecialchars($item['brand'] ?? ''); ?></td>
+                                            <td><?php echo htmlspecialchars($item['unit'] ?? ''); ?></td>
+                                            <td class="num">
+                                                <?php
+                                                $cost = $item['unit_cost'] ?? '';
+                                                echo is_numeric($cost) && $cost !== ''
+                                                    ? format_dashboard_currency((float)$cost)
+                                                    : '—';
+                                                ?>
+                                            </td>
+                                        </tr>
+                                    <?php endforeach; ?>
+                                </tbody>
+                            </table>
+                        </div>
+                    <?php endif; ?>
+                </article>
+            </section>
         </div>
     </main>
 

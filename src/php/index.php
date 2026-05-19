@@ -3,6 +3,7 @@ require_once __DIR__ . '/auth.php';
 require_login();
 
 require_once __DIR__ . '/cart.php';
+require_once __DIR__ . '/catalog.php';
 require_once __DIR__ . '/components.php';
 
 $BASE_URL = dirname($_SERVER['SCRIPT_NAME'], 3);
@@ -12,96 +13,86 @@ if ($BASE_URL === DIRECTORY_SEPARATOR) {
 
 $currentUser = current_user();
 
-// Handle add to cart request
-if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['add_to_cart'])) {
-    $item_json = $_POST['item_json'] ?? null;
-    $variation_json = $_POST['variation_json'] ?? null;
-    $quantity = intval($_POST['quantity'] ?? 1);
-    
-    if ($item_json) {
-        $item = json_decode($item_json, true);
-        $variation = $variation_json ? json_decode($variation_json, true) : null;
-        add_to_cart($item, $quantity, $variation);
-        $_SESSION['message'] = ['type' => 'success', 'text' => 'Item added to cart!'];
+// Handle catalog and cart POST actions
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    if (isset($_POST['add_to_cart'])) {
+        $item_json = $_POST['item_json'] ?? null;
+        $quantity = intval($_POST['quantity'] ?? 1);
+
+        if ($item_json) {
+            $item = json_decode($item_json, true);
+            add_to_cart($item, $quantity);
+            $_SESSION['message'] = ['type' => 'success', 'text' => 'Item added to cart!'];
+        }
+    } elseif (isset($_POST['update_price'])) {
+        $items = load_catalog_items();
+        $index = intval($_POST['item_index'] ?? -1);
+        $price = (string)($_POST['unit_cost'] ?? '');
+
+        if (update_catalog_item_price($items, $index, $price)) {
+            $_SESSION['message'] = ['type' => 'success', 'text' => 'Price updated successfully.'];
+        } else {
+            $_SESSION['message'] = ['type' => 'error', 'text' => 'Could not update price. Enter a valid amount.'];
+        }
+    } elseif (isset($_POST['add_catalog_item'])) {
+        $items = load_catalog_items();
+        $newItem = [
+            'item_name' => trim($_POST['item_name'] ?? ''),
+            'category' => trim($_POST['category'] ?? ''),
+            'brand' => trim($_POST['brand'] ?? ''),
+            'model' => trim($_POST['model'] ?? ''),
+            'unit' => trim($_POST['unit'] ?? 'Each'),
+            'unit_cost' => (string)($_POST['unit_cost'] ?? ''),
+        ];
+
+        if ($newItem['item_name'] === '' || $newItem['category'] === '' || normalize_catalog_price($newItem['unit_cost']) === '') {
+            $_SESSION['message'] = ['type' => 'error', 'text' => 'Item name, category, and price are required.'];
+        } elseif (save_catalog_items(add_catalog_item($items, $newItem))) {
+            $_SESSION['message'] = ['type' => 'success', 'text' => 'New item added to the catalog.'];
+        } else {
+            $_SESSION['message'] = ['type' => 'error', 'text' => 'Could not save the new item.'];
+        }
     }
-    
+
     header('Location: index.php?' . buildQueryString());
     exit;
 }
 
-function load_items_from_json(): array
-{
-    $jsonFile = dirname(__DIR__, 2) . '/excel_files/items.json';
-    if (!file_exists($jsonFile)) {
-        return [];
-    }
-
-    $contents = file_get_contents($jsonFile);
-    $items = json_decode($contents, true);
-    return is_array($items) ? $items : [];
-}
-
-function unique_values(array $items, string $key): array
-{
-    $values = [];
-    foreach ($items as $item) {
-        $value = trim((string)($item[$key] ?? ''));
-        if ($value !== '' && !in_array($value, $values, true)) {
-            $values[] = $value;
-        }
-    }
-    sort($values);
-    return $values;
-}
-
-function filter_items(array $items, string $query, string $category, string $brand): array
-{
-    $query = strtolower(trim($query));
-    $category = trim($category);
-    $brand = trim($brand);
-    if ($query === '' && $category === '' && $brand === '') {
-        return $items;
-    }
-
-    $filtered = [];
-    foreach ($items as $item) {
-        $haystack = strtolower(
-            implode(' ', [
-                $item['item_name'] ?? '',
-                $item['brand'] ?? '',
-                $item['category'] ?? '',
-                $item['model'] ?? '',
-                is_array($item['specs']) ? json_encode($item['specs']) : ($item['specs'] ?? ''),
-            ])
-        );
-
-        $matchesQuery = $query === '' || strpos($haystack, $query) !== false;
-        $matchesCategory = $category === '' || ($item['category'] ?? '') === $category;
-        $matchesBrand = $brand === '' || ($item['brand'] ?? '') === $brand;
-
-        if ($matchesQuery && $matchesCategory && $matchesBrand) {
-            $filtered[] = $item;
-        }
-    }
-    return $filtered;
-}
-
-$items = load_items_from_json();
+$items = load_catalog_items();
 $query = trim($_GET['q'] ?? '');
 $category = trim($_GET['category'] ?? '');
 $brand = trim($_GET['brand'] ?? '');
 $page = max(1, intval($_GET['page'] ?? 1));
 $resultsPerPage = 20;
 
-$categories = unique_values($items, 'category');
-$brands = unique_values($items, 'brand');
+$categories = catalog_unique_values($items, 'category');
+$brands = catalog_unique_values($items, 'brand');
 
-$filteredItems = filter_items($items, $query, $category, $brand);
-$totalResults = count($filteredItems);
+$filteredEntries = [];
+foreach ($items as $idx => $item) {
+    $haystack = strtolower(
+        implode(' ', [
+            $item['item_name'] ?? '',
+            $item['brand'] ?? '',
+            $item['category'] ?? '',
+            $item['model'] ?? '',
+            is_array($item['specs'] ?? null) ? json_encode($item['specs']) : ($item['specs'] ?? ''),
+        ])
+    );
+    $matchesQuery = $query === '' || strpos($haystack, strtolower($query)) !== false;
+    $matchesCategory = $category === '' || ($item['category'] ?? '') === $category;
+    $matchesBrand = $brand === '' || ($item['brand'] ?? '') === $brand;
+
+    if ($matchesQuery && $matchesCategory && $matchesBrand) {
+        $filteredEntries[] = ['index' => $idx, 'item' => $item];
+    }
+}
+
+$totalResults = count($filteredEntries);
 $totalPages = max(1, (int)ceil($totalResults / $resultsPerPage));
 $page = min($page, $totalPages);
 $offset = ($page - 1) * $resultsPerPage;
-$displayItems = array_slice($filteredItems, $offset, $resultsPerPage);
+$displayEntries = array_slice($filteredEntries, $offset, $resultsPerPage);
 
 function formatCurrency($value)
 {
@@ -156,13 +147,16 @@ function buildQueryString($overrides = [])
     <main class="page-enter">
         <div class="container glass">
             <div class="page-actions">
-                <a href="dashboard.php" class="button secondary icon-btn"><span>↩</span> Back to Dashboard</a>
+                <a href="dashboard.php" class="button secondary">Back to Dashboard</a>
             </div>
 
-            <section class="hero-grid">
+            <section class="hero-grid catalog-hero">
                 <div class="hero-copy">
-                    <h1>Excel Item Table</h1>
-                    <p class="subtitle">All rows are loaded directly from uploaded Excel files. Prices are set per item because costs may vary.</p>
+                    <h1>Item Catalog</h1>
+                    <p class="subtitle">Browse procurement items by category, update prices, add new items, and build your cart for export.</p>
+                </div>
+                <div class="hero-side">
+                    <button type="button" class="button" id="openAddItemBtn">Add New Item</button>
                 </div>
             </section>
 
@@ -181,7 +175,7 @@ function buildQueryString($overrides = [])
                             <option value="<?php echo htmlspecialchars($value); ?>" <?php echo $value === $brand ? 'selected' : ''; ?>><?php echo htmlspecialchars($value); ?></option>
                         <?php endforeach; ?>
                     </select>
-                    <button type="submit" class="button icon-btn"><span>🔎</span> Filter</button>
+                    <button type="submit" class="button">Apply Filters</button>
                 </form>
             </div>
 
@@ -198,7 +192,7 @@ function buildQueryString($overrides = [])
                 <?php if ($category): ?> in <strong><?php echo htmlspecialchars($category); ?></strong><?php endif; ?>
             </div>
 
-            <?php if (!empty($displayItems)): ?>
+            <?php if (!empty($displayEntries)): ?>
                 <div class="table-wrapper">
                     <table class="item-table">
                         <thead>
@@ -213,8 +207,10 @@ function buildQueryString($overrides = [])
                             </tr>
                         </thead>
                         <tbody>
-                            <?php foreach ($displayItems as $item): 
-                                $variations = get_item_variations($item);
+                            <?php foreach ($displayEntries as $entry):
+                                $item = $entry['item'];
+                                $itemIndex = $entry['index'];
+                                $priceValue = is_numeric($item['unit_cost'] ?? '') ? (float)$item['unit_cost'] : '';
                                 ?>
                                 <tr>
                                     <td>
@@ -224,14 +220,20 @@ function buildQueryString($overrides = [])
                                     <td><?php echo htmlspecialchars($item['brand'] ?? ''); ?></td>
                                     <td><?php echo htmlspecialchars($item['model'] ?? ''); ?></td>
                                     <td><?php echo htmlspecialchars($item['unit'] ?? ''); ?></td>
-                                    <td><?php echo $item['unit_cost'] !== '' ? formatCurrency($item['unit_cost']) : '<span class="placeholder">No price</span>'; ?></td>
+                                    <td class="price-cell">
+                                        <form method="POST" class="inline-price-form">
+                                            <input type="hidden" name="update_price" value="1">
+                                            <input type="hidden" name="item_index" value="<?php echo (int)$itemIndex; ?>">
+                                            <input type="number" name="unit_cost" class="price-input" min="0" step="0.01"
+                                                   value="<?php echo $priceValue !== '' ? htmlspecialchars((string)$priceValue) : ''; ?>"
+                                                   placeholder="0.00" required>
+                                            <button type="submit" class="button sm secondary">Save</button>
+                                        </form>
+                                    </td>
                                     <td class="action-cell">
-                                        <button class="button sm primary icon-btn add-to-cart-btn" 
+                                        <button class="button sm primary add-to-cart-btn"
                                                 data-item-json='<?php echo htmlspecialchars(json_encode($item)); ?>'
-                                                data-variations='<?php echo htmlspecialchars(json_encode($variations)); ?>'
-                                                title="Add to cart">
-                                            <span>+</span>
-                                        </button>
+                                                title="Add to cart">Add</button>
                                     </td>
                                 </tr>
                             <?php endforeach; ?>
@@ -241,13 +243,13 @@ function buildQueryString($overrides = [])
 
                 <div class="pagination">
                     <?php if ($page > 1): ?>
-                        <a href="index.php?<?php echo buildQueryString(['page' => $page - 1]); ?>" class="button icon-btn"><span>⬅</span> Previous</a>
+                        <a href="index.php?<?php echo buildQueryString(['page' => $page - 1]); ?>" class="button secondary">Previous</a>
                     <?php else: ?>
                         <span class="button disabled">Previous</span>
                     <?php endif; ?>
                     <span class="page-info">Page <?php echo $page; ?> of <?php echo $totalPages; ?></span>
                     <?php if ($page < $totalPages): ?>
-                        <a href="index.php?<?php echo buildQueryString(['page' => $page + 1]); ?>" class="button icon-btn">Next <span>➡</span></a>
+                        <a href="index.php?<?php echo buildQueryString(['page' => $page + 1]); ?>" class="button secondary">Next</a>
                     <?php else: ?>
                         <span class="button disabled">Next</span>
                     <?php endif; ?>
@@ -260,10 +262,63 @@ function buildQueryString($overrides = [])
         </div>
     </main>
 
+    <!-- Add Item Modal -->
+    <div id="addItemModal" class="modal">
+        <div class="modal-content">
+            <span class="modal-close" data-modal="addItemModal">&times;</span>
+            <h2>Add Catalog Item</h2>
+            <form method="POST" class="add-item-form">
+                <input type="hidden" name="add_catalog_item" value="1">
+                <label>
+                    Item Name
+                    <input type="text" name="item_name" class="form-input" required>
+                </label>
+                <label>
+                    Category
+                    <input list="category-list" name="category" class="form-input" required placeholder="e.g. Office Supplies">
+                    <datalist id="category-list">
+                        <?php foreach ($categories as $value): ?>
+                            <option value="<?php echo htmlspecialchars($value); ?>"></option>
+                        <?php endforeach; ?>
+                    </datalist>
+                </label>
+                <label>
+                    Brand <span class="optional">(optional)</span>
+                    <input type="text" name="brand" class="form-input">
+                </label>
+                <label>
+                    Model <span class="optional">(optional)</span>
+                    <input type="text" name="model" class="form-input">
+                </label>
+                <label>
+                    Unit
+                    <select name="unit" class="form-input" required>
+                        <option value="Each">Each</option>
+                        <option value="PCS">PCS</option>
+                        <option value="PAX">PAX</option>
+                        <option value="Box">Box</option>
+                        <option value="Set">Set</option>
+                        <option value="Pack">Pack</option>
+                        <option value="Roll">Roll</option>
+                        <option value="REAM">REAM</option>
+                    </select>
+                </label>
+                <label>
+                    Unit Price
+                    <input type="number" name="unit_cost" class="form-input" min="0" step="0.01" required>
+                </label>
+                <div class="modal-actions">
+                    <button type="submit" class="button primary">Save Item</button>
+                    <button type="button" class="button secondary modal-close-btn" data-modal="addItemModal">Cancel</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
     <!-- Add to Cart Modal -->
     <div id="addToCartModal" class="modal">
         <div class="modal-content">
-            <span class="modal-close">&times;</span>
+            <span class="modal-close" data-modal="addToCartModal">&times;</span>
             <h2>Add Item to Cart</h2>
             
             <div id="modalItemInfo"></div>
@@ -271,14 +326,6 @@ function buildQueryString($overrides = [])
             <form id="addToCartForm" method="POST">
                 <input type="hidden" name="add_to_cart" value="1">
                 <input type="hidden" name="item_json" id="modalItemJson">
-                <input type="hidden" name="variation_json" id="modalVariationJson">
-                
-                <div id="variationsContainer" class="form-group" style="display: none;">
-                    <label for="variationSelect">Select Variation</label>
-                    <select id="variationSelect" class="form-input">
-                        <option value="">-- Choose variation --</option>
-                    </select>
-                </div>
                 
                 <div class="form-group">
                     <label for="quantityInput">Quantity</label>
@@ -287,7 +334,7 @@ function buildQueryString($overrides = [])
                 
                 <div class="modal-actions">
                     <button type="submit" class="button primary">Add to Cart</button>
-                    <button type="button" class="button secondary modal-close-btn">Cancel</button>
+                    <button type="button" class="button secondary modal-close-btn" data-modal="addToCartModal">Cancel</button>
                 </div>
             </form>
         </div>
@@ -296,92 +343,47 @@ function buildQueryString($overrides = [])
     <?php render_footer($BASE_URL); ?>
 
     <script>
-        // Modal handling
-        const modal = document.getElementById('addToCartModal');
-        const closeButtons = document.querySelectorAll('.modal-close, .modal-close-btn');
-        let currentVariations = [];
-        
-        closeButtons.forEach(btn => {
+        function openModal(id) {
+            document.getElementById(id).classList.add('show');
+        }
+
+        function closeModal(id) {
+            document.getElementById(id).classList.remove('show');
+        }
+
+        document.querySelectorAll('.modal-close, .modal-close-btn').forEach(btn => {
             btn.addEventListener('click', () => {
-                modal.style.display = 'none';
+                const modalId = btn.dataset.modal;
+                if (modalId) closeModal(modalId);
             });
         });
-        
-        window.addEventListener('click', (e) => {
-            if (e.target === modal) {
-                modal.style.display = 'none';
-            }
+
+        ['addToCartModal', 'addItemModal'].forEach(id => {
+            const modal = document.getElementById(id);
+            modal.addEventListener('click', (e) => {
+                if (e.target === modal) closeModal(id);
+            });
         });
-        
-        // Add to cart button handlers
+
+        document.getElementById('openAddItemBtn').addEventListener('click', () => openModal('addItemModal'));
+
         document.querySelectorAll('.add-to-cart-btn').forEach(btn => {
             btn.addEventListener('click', function() {
-                const itemJson = this.dataset.itemJson;
-                const variationsJson = this.dataset.variations;
-                
-                const item = JSON.parse(itemJson);
-                currentVariations = JSON.parse(variationsJson);
-                
-                // Show item info
+                const item = JSON.parse(this.dataset.itemJson);
                 const infoHtml = `
                     <div class="item-details">
                         <p><strong>${item.item_name}</strong></p>
                         <p class="text-muted">Category: ${item.category}</p>
-                        <p class="text-muted">Brand: ${item.brand}</p>
+                        <p class="text-muted">Brand: ${item.brand || '—'}</p>
                         <p class="text-muted">Unit: ${item.unit}</p>
-                        <p class="text-accent">Price: ₱${parseFloat(item.unit_cost).toFixed(2)}</p>
+                        <p class="text-accent">Price: ₱${parseFloat(item.unit_cost || 0).toFixed(2)}</p>
                     </div>
                 `;
-                
                 document.getElementById('modalItemInfo').innerHTML = infoHtml;
-                document.getElementById('modalItemJson').value = itemJson;
-                
-                // Handle variations
-                const variationSelect = document.getElementById('variationSelect');
-                const variationsContainer = document.getElementById('variationsContainer');
-                
-                if (currentVariations.length > 1) {
-                    variationsContainer.style.display = 'block';
-                    variationSelect.innerHTML = '<option value="">-- Choose variation --</option>';
-                    currentVariations.forEach((v, idx) => {
-                        const option = document.createElement('option');
-                        option.value = JSON.stringify(v);
-                        option.textContent = v.name;
-                        variationSelect.appendChild(option);
-                    });
-                } else {
-                    variationsContainer.style.display = 'none';
-                    if (currentVariations.length === 1) {
-                        document.getElementById('modalVariationJson').value = JSON.stringify(currentVariations[0]);
-                    }
-                }
-                
+                document.getElementById('modalItemJson').value = this.dataset.itemJson;
                 document.getElementById('quantityInput').value = '1';
-                modal.style.display = 'block';
+                openModal('addToCartModal');
             });
-        });
-        
-        // Form submission
-        document.getElementById('addToCartForm').addEventListener('submit', function(e) {
-            e.preventDefault();
-            
-            const variationSelect = document.getElementById('variationSelect');
-            if (variationSelect.style.display !== 'none' && !variationSelect.value) {
-                alert('Please select a variation');
-                return;
-            }
-            
-            if (variationSelect.value) {
-                document.getElementById('modalVariationJson').value = variationSelect.value;
-            }
-            
-            this.submit();
-        });
-        
-        document.getElementById('variationSelect').addEventListener('change', function() {
-            if (this.value) {
-                document.getElementById('modalVariationJson').value = this.value;
-            }
         });
     </script>
 </body>

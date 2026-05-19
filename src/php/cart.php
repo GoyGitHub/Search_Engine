@@ -16,7 +16,7 @@ function validate_cart_item($item, $quantity)
     return true;
 }
 
-function add_to_cart($item, $quantity = 1, $variation = null)
+function add_to_cart($item, $quantity = 1)
 {
     init_cart();
 
@@ -25,15 +25,13 @@ function add_to_cart($item, $quantity = 1, $variation = null)
         return;
     }
 
-    // Create a unique key for the cart item
-    $item_key = create_cart_item_key($item, $variation);
+    $item_key = create_cart_item_key($item);
 
     if (isset($_SESSION['cart'][$item_key])) {
         $_SESSION['cart'][$item_key]['quantity'] += $quantity;
     } else {
         $_SESSION['cart'][$item_key] = [
             'item' => $item,
-            'variation' => $variation,
             'quantity' => $quantity,
             'added_at' => date('Y-m-d H:i:s'),
         ];
@@ -71,13 +69,9 @@ function clear_cart()
     $_SESSION['cart'] = [];
 }
 
-function create_cart_item_key($item, $variation = null)
+function create_cart_item_key($item)
 {
-    $base = md5($item['item_name'] . '|' . $item['category'] . '|' . $item['brand']);
-    if ($variation) {
-        $base .= '|' . md5(json_encode($variation));
-    }
-    return $base;
+    return md5($item['item_name'] . '|' . $item['category'] . '|' . $item['brand']);
 }
 
 function get_cart_stats()
