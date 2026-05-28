@@ -8,7 +8,7 @@ from datetime import datetime
 from pathlib import Path
 
 from openpyxl import load_workbook
-from openpyxl.styles import Alignment
+from openpyxl.styles import Alignment, Font, Border, Side, PatternFill
 from openpyxl.utils import get_column_letter
 
 COL_ITEM_NO = 1
@@ -22,8 +22,29 @@ COL_LAST = 12
 DEFAULT_SHEET = "ABC (2)"
 MONEY_FORMAT = "#,##0.00"
 
+# Define border styles
+THIN_BORDER = Border(
+    left=Side(style='thin'),
+    right=Side(style='thin'),
+    top=Side(style='thin'),
+    bottom=Side(style='thin')
+)
+
+# Define fill colors
+HEADER_FILL = PatternFill(start_color="4CAF50", end_color="4CAF50", fill_type="solid")
+DEPARTMENT_FILL = PatternFill(start_color="76B82A", end_color="76B82A", fill_type="solid")  # Bright green
+CATEGORY_FILL = PatternFill(start_color="76B82A", end_color="76B82A", fill_type="solid")  # Bright green
+TOTAL_FILL = PatternFill()  # No background fill
+
+# Define fonts
+HEADER_FONT = Font(name='Calibri', size=11, bold=True, color="FFFFFF")
+DEPARTMENT_FONT = Font(name='Calibri', size=11, bold=True, color="000000")  # Black text on green
+CATEGORY_FONT = Font(name='Calibri', size=10, bold=True, color="000000")  # Black text on green
+ITEM_FONT = Font(name='Calibri', size=10)
+TOTAL_FONT = Font(name='Calibri', size=11, bold=True, color="CC0000")  # Red text
+
 ALIGN_ITEM_NO = Alignment(horizontal="center", vertical="center")
-ALIGN_DESC = Alignment(horizontal="left", vertical="center", wrap_text=True)
+ALIGN_DESC = Alignment(horizontal="left", vertical="top", wrap_text=True)
 ALIGN_QTY = Alignment(horizontal="center", vertical="center")
 ALIGN_UNIT = Alignment(horizontal="center", vertical="center")
 ALIGN_MONEY = Alignment(horizontal="right", vertical="center")
@@ -128,13 +149,28 @@ def update_header_fields(ws, department: str, project_title: str, revised_date: 
     ws.cell(7, 1, project_title)
 
 
+def apply_department_row(ws, row: int, department: str) -> None:
+    """Apply bright green department section header row."""
+    ws.row_dimensions[row].height = 24
+    for col in range(1, COL_LAST + 1):
+        cell = ws.cell(row, col)
+        cell.value = None
+        cell.fill = DEPARTMENT_FILL
+        cell.border = THIN_BORDER
+        cell.font = DEPARTMENT_FONT
+        cell.alignment = ALIGN_CATEGORY
+    ws.cell(row, COL_DESC).value = department.upper()
+
+
 def apply_category_row(ws, row: int, category: str, style_row: int) -> None:
-    copy_row_style(ws, style_row, row)
-    ws.row_dimensions[row].height = ws.row_dimensions[style_row].height or 24
+    ws.row_dimensions[row].height = 24
 
     for col in range(1, COL_LAST + 1):
         cell = ws.cell(row, col)
         cell.value = None
+        cell.fill = CATEGORY_FILL
+        cell.border = THIN_BORDER
+        cell.font = CATEGORY_FONT
         if col == COL_DESC:
             cell.value = category.upper()
             cell.alignment = ALIGN_CATEGORY
@@ -144,7 +180,7 @@ def apply_category_row(ws, row: int, category: str, style_row: int) -> None:
 
 def apply_item_row(ws, row: int, item_no: int, entry: dict, style_row: int) -> float:
     copy_row_style(ws, style_row, row)
-    ws.row_dimensions[row].height = ws.row_dimensions[style_row].height or 22
+    ws.row_dimensions[row].height = 26
 
     qty = float(entry.get("quantity") or 0)
     unit_cost = float(entry.get("unit_cost") or 0)
@@ -163,6 +199,8 @@ def apply_item_row(ws, row: int, item_no: int, entry: dict, style_row: int) -> f
     for col in range(1, COL_LAST + 1):
         cell = ws.cell(row, col)
         cell.value = values.get(col)
+        cell.font = ITEM_FONT
+        cell.border = THIN_BORDER
         if col in (COL_MARKET, COL_TOTAL, COL_UNIT_COST) and cell.value is not None:
             cell.number_format = MONEY_FORMAT
 
@@ -180,16 +218,23 @@ def apply_item_row(ws, row: int, item_no: int, entry: dict, style_row: int) -> f
 
 
 def apply_total_row(ws, row: int, grand_total: float, style_row: int) -> None:
-    copy_row_style(ws, style_row, row)
-    ws.row_dimensions[row].height = ws.row_dimensions[style_row].height or 22
+    ws.row_dimensions[row].height = 26
 
     for col in range(1, COL_LAST + 1):
-        ws.cell(row, col, None)
+        cell = ws.cell(row, col)
+        cell.value = None
+        cell.border = THIN_BORDER
 
-    ws.cell(row, 10, "TOTAL").alignment = ALIGN_TOTAL_LABEL
+    total_label = ws.cell(row, 10, "TOTAL")
+    total_label.alignment = ALIGN_TOTAL_LABEL
+    total_label.font = TOTAL_FONT  # Red text
+    total_label.border = THIN_BORDER
+    
     total_cell = ws.cell(row, COL_TOTAL, round(grand_total, 2))
     total_cell.number_format = MONEY_FORMAT
     total_cell.alignment = ALIGN_MONEY
+    total_cell.font = TOTAL_FONT  # Red text
+    total_cell.border = THIN_BORDER
 
 
 def remove_blank_rows(ws, start_row: int, end_row: int) -> None:
@@ -203,6 +248,18 @@ def finalize_sheet(ws, last_row: int) -> None:
     ws.row_breaks.brk = []
     ws.col_breaks.brk = []
     ws.print_area = f"A1:{get_column_letter(COL_LAST)}{max(last_row + 2, 30)}"
+    
+    # Set optimized column widths for professional appearance
+    ws.column_dimensions['A'].width = 6   # Item No.
+    ws.column_dimensions['B'].width = 35  # Description
+    ws.column_dimensions['C'].width = 8   # QTY
+    ws.column_dimensions['D'].width = 10  # Unit
+    ws.column_dimensions['E'].width = 14  # Current Market Price
+    for col in range(6, 10):
+        ws.column_dimensions[get_column_letter(col)].width = 12
+    ws.column_dimensions['J'].width = 18  # Other cost factors label
+    ws.column_dimensions['K'].width = 14  # Total Cost
+    ws.column_dimensions['L'].width = 14  # Unit Cost
 
 
 def generate_from_template(payload: dict, template_path: Path, output_path: Path) -> None:
@@ -227,7 +284,8 @@ def generate_from_template(payload: dict, template_path: Path, output_path: Path
     update_header_fields(ws, department, project_title, revised_date)
 
     grouped = group_items_by_category(items)
-    new_row_count = sum(1 + len(category_items) for category_items in grouped.values()) + 1
+    # Calculate rows: 1 (department) + sum(1 category + N items per category) + 1 (total)
+    new_row_count = 1 + sum(1 + len(category_items) for category_items in grouped.values()) + 1
     old_row_count = total_row - data_start + 1
 
     trailing_blank_end = signature_row - 1 if signature_row > total_row else total_row
@@ -241,6 +299,10 @@ def generate_from_template(payload: dict, template_path: Path, output_path: Path
 
     current_row = data_start
     grand_total = 0.0
+
+    # Add department section header
+    apply_department_row(ws, current_row, department)
+    current_row += 1
 
     for category, category_items in grouped.items():
         apply_category_row(ws, current_row, category, category_style_row)

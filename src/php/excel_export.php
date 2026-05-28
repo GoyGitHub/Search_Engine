@@ -66,9 +66,20 @@ function generate_budget_excel_file(array $cart, string $department, string $pro
 
     file_put_contents($jsonPath, json_encode($payload, JSON_UNESCAPED_UNICODE));
 
+    // Use project venv Python first (has all dependencies), then fall back to system Python
+    $venvPython = $projectRoot . DIRECTORY_SEPARATOR . '.venv' . DIRECTORY_SEPARATOR . 'Scripts' . DIRECTORY_SEPARATOR . 'python.exe';
     $pythonCandidates = strtoupper(substr(PHP_OS, 0, 3)) === 'WIN'
-        ? ['python', 'py', 'python3']
-        : ['python3', 'python'];
+        ? [
+            $venvPython,  // Project venv Python (preferred, has dependencies)
+            'python',
+            'py',
+            'python3',
+        ]
+        : [
+            $projectRoot . '/.venv/bin/python',  // Unix/Linux venv Python
+            'python3',
+            'python',
+        ];
 
     $output = [];
     $exitCode = 1;
